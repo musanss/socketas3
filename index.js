@@ -7,7 +7,12 @@ var port = process.env.PORT || 5000
 app.use(express.static(__dirname + "/"))
 
 var server = http.createServer(app)
+
+var io = require('socket.io').listen(server, {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']})
+var fs = require('fs')
+
 server.listen(port)
+
 
 console.log("http server listening on %d", port)
 
