@@ -4,20 +4,11 @@ var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
 
-var app2 = require('express')();
-var http2 = require('http').Server(app2);
-var io = require('socket.io')(http2);
-
-http2.listen(port, function(){
-  console.log('listening on *:' + port);
-});
+var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + "/"))
 
 var server = http.createServer(app)
-
-
-
 server.listen(port)
 
 
