@@ -6,8 +6,7 @@ var port = process.env.PORT || 5000
 
 var app2 = require('express')();
 var http2 = require('http').Server(app2);
-var io = require('socket.io')(http2).listen(http2 , {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']});
-var fs = require('fs')
+var io = require('socket.io')(http2);
 
 http2.listen(port, function(){
   console.log('listening on *:' + port);
