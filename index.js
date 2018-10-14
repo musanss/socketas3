@@ -4,12 +4,20 @@ var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
 
+var app2 = require('express')();
+var http2 = require('http').Server(app2);
+var io = require('socket.io')(http2).listen(http2 , {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']});
+var fs = require('fs')
+
+http2.listen(port, function(){
+  console.log('listening on *:' + port);
+});
+
 app.use(express.static(__dirname + "/"))
 
 var server = http.createServer(app)
 
-var io = require('socket.io').listen(server, {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']})
-var fs = require('fs')
+
 
 server.listen(port)
 
