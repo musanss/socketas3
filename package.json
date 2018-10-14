@@ -14,7 +14,7 @@
   },
   "subdomain": "Musa",
   "scripts": {
-    "start": "node index.js"
+    "start": "node flashSocketIO.js"
   },
   "engines": {
     "node": "0.8.x"
