@@ -1,8 +1,8 @@
 var WebSocketServer = require("ws").Server
 var http = require("http")
-var httpTest = require("http")
 var express = require("express")
 var app = express()
+var httpTest = require('http').Server(app);
 var port = process.env.PORT || 5000
 
 var io = require('socket.io')(httpTest);
