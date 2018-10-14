@@ -7,9 +7,18 @@ var port = process.env.PORT || 5000
 
 app.use(express.static(__dirname + "/"))
 
-var server = http.createServer(app)
-var io = require('socket.io').listen(server, {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']})
+var server = http.createServer()
+//var io = require('socket.io').listen(server, {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']})
+
+
+
+
+var app2 = require('http').createServer()
+  , io = require('socket.io').listen(server, {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']})
+  , fs = require('fs')
+
 server.listen(port)
+
 
 io.sockets.on('connection', function (socket) {
 	socket.emit('WelcomeMsg', 'hello world');
