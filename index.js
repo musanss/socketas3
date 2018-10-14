@@ -1,16 +1,9 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var port = process.env.PORT || 3000;
+var app = require('http').createServer()
+  , io = require('socket.io').listen(app, {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']})
+  , fs = require('fs')
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
+app.listen(8085);
 
-io.on('connection', function(socket){
- 
-});
-
-http.listen(port, function(){
-  console.log('listening on *:' + port);
-});
+io.sockets.on('connection', function (socket) {
+	
+	});
