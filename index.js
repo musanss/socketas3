@@ -1,45 +1,27 @@
-var WebSocketServer = require("ws").Server
-var http = require("http")
+const
+    io = require("socket.io"),
+    server = io.listen(8000);
 
-var express = require("express")
-var app = express()
-var port = process.env.PORT || 5000
+let
+    sequenceNumberByClient = new Map();
 
-app.use(express.static(__dirname + "/"))
+// event fired every time a new client connects:
+server.on("connection", (socket) => {
+    console.info(`Client connected [id=${socket.id}]`);
+    // initialize this client's sequence number
+    sequenceNumberByClient.set(socket, 1);
 
-var server = http.createServer()
-//var io = require('socket.io').listen(server, {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']})
-
-
-
-
-var app2 = require('http').createServer()
-  , io = require('socket.io').listen(server, {transports:['flashsocket', 'websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']})
-  , fs = require('fs')
-
-server.listen(port)
-
-
-io.sockets.on('connection', function (socket) {
-	socket.emit('WelcomeMsg', 'hello world');
+    // when socket disconnects, remove it from the list:
+    socket.on("disconnect", () => {
+        sequenceNumberByClient.delete(socket);
+        console.info(`Client gone [id=${socket.id}]`);
+    });
 });
 
-
-console.log("http server listening on %d", port)
-
-var wss = new WebSocketServer({server: server})
-console.log("websocket server created")
-
-
-wss.on("connection", function(ws) {
-  var id = setInterval(function() {
-    ws.send(JSON.stringify(new Date()), function() {  })
-  }, 1000)
-
-  console.log("websocket connection open")
-
-  ws.on("close", function() {
-    console.log("websocket connection close")
-    clearInterval(id)
-  })
-})
+// sends each client its current sequence number
+/*setInterval(() => {
+    for (const [client, sequenceNumber] of sequenceNumberByClient.entries()) {
+        client.emit("seq-num", sequenceNumber);
+        sequenceNumberByClient.set(client, sequenceNumber + 1);
+    }
+}, 1000);*/
