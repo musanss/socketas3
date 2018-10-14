@@ -1,10 +1,16 @@
 var WebSocketServer = require("ws").Server
 var http = require("http")
+var httpTest = require("http")
 var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
 
-//var io = require('socket.io')(http);
+var io = require('socket.io')(httpTest);
+
+/*http.listen(port, function(){
+  console.log('listening on *:' + port);
+});*/
+
 
 app.use(express.static(__dirname + "/"))
 
