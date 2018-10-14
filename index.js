@@ -1,15 +1,17 @@
-const Server = require('socket.io');
 var express = require('express');
-const PORT   = 3000;
+var path = require('path');
 var app = express();
-const server = require('http').Server();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+var _ = require('lodash');
+var port = process.env.PORT || 3000;
 
-const io = Server(PORT);
+//app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
-server.listen(PORT); // PORT is free to use
-
-io = Server(server);
+http.listen(port, function(){
+    console.log('listening on *:' + port);
+});
