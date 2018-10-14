@@ -1,47 +1,28 @@
-var express = require('express');
-var path = require('path');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var _ = require('lodash');
-var port = process.env.PORT || 3000;
+var WebSocketServer = require("ws").Server
+var http = require("http")
+var express = require("express")
+var app = express()
+var port = process.env.PORT || 5000
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + "/"))
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
-});
+var server = http.createServer(app)
+server.listen(port)
 
-var users = [];
+console.log("http server listening on %d", port)
 
-io.on('connection', function(socket) {
-	console.log('listening on *:' + port);
-    socket.on('online user', function(user) {
-        user.socket_id = socket.id;
+var wss = new WebSocketServer({server: server})
+console.log("websocket server created")
 
-        var foundUser = _.find(users, {id: user.id});
+wss.on("connection", function(ws) {
+  var id = setInterval(function() {
+    ws.send(JSON.stringify(new Date()), function() {  })
+  }, 1000)
 
-        if (foundUser) {
-            foundUser.socket_id = socket.id;
-        } else {
-            users.push(user);
-        }
+  console.log("websocket connection open")
 
-        io.emit('online users list', users);
-    });
-
-    socket.on('chat message', function(msg, toUserID, from) {
-        var toUser = _.find(users, {id: toUserID});
-        socket.to(toUser.socket_id).emit('chat message', msg, from);
-    });
-
-    socket.on('disconnect', function() {
-        users = _.reject(users, {socket_id: socket.id});
-		console.log('listening on *:' + port + ' Disconnected');
-    });
-});
-
-
-http.listen(port, function(){
-    console.log('listening on *:' + port);
-});
+  ws.on("close", function() {
+    console.log("websocket connection close")
+    clearInterval(id)
+  })
+})
