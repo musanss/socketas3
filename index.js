@@ -7,9 +7,9 @@ var port = process.env.PORT || 5000
 
 var io = require('socket.io')(httpTest);
 
-/*http.listen(port, function(){
+http2.listen(port, function(){
   console.log('listening on *:' + port);
-});*/
+});
 
 
 app.use(express.static(__dirname + "/"))
